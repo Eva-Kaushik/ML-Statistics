@@ -1,0 +1,39 @@
+Problem:
+You're working on a machine learning project to predict housing prices. You have a dataset with various features like square footage, number of bedrooms, and age of the house. 
+You want to ensure that your model isn't overfitting to the training data. How would you use statistics to evaluate if your model is overfitting?
+
+Solution:
+To evaluate if your model is overfitting, you can use a statistical method called cross-validation. 
+
+1. Split the Data: Divide your dataset into 'k' subsets, commonly known as folds (for example, k=10).
+
+2. Train and Validate: For each fold:
+   - Train your model on k-1 folds.
+   - Validate the model on the remaining fold, which acts as the test set.
+
+3. Calculate Performance Metrics: After training and validating on each fold, calculate performance metrics such as Mean Squared Error (MSE) for regression tasks.
+
+4. Analyze the Results: If your model performs well on the training folds but poorly on the validation folds, it may be overfitting. Consistent performance across all folds suggests a well-generalized model.
+
+5. Adjust the Model: Based on the cross-validation results, you can adjust your model's complexity, add regularization, or gather more data to improve generalization.
+
+
+```python
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+import numpy as np
+
+boston = load_boston()
+X, y = boston.data, boston.target
+
+model = LinearRegression()
+
+scores = cross_val_score(model, X, y, scoring='neg_mean_squared_error', cv=10)
+
+mean_mse = np.mean(np.abs(scores))
+std_mse = np.std(scores)
+
+print(f"Mean MSE: {mean_mse:.2f}")
+print(f"Standard Deviation of MSE: {std_mse:.2f}")
+```
