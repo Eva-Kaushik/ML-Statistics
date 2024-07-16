@@ -1,0 +1,80 @@
+Question:
+
+You are given a dataset with 10,000 observations and 20 features. You want to build a predictive model using logistic regression to classify whether an observation belongs to class 0 or class 1. However, the dataset is highly imbalanced, with only 5% of the observations belonging to class 1. 
+To address this imbalance, you decide to use the Synthetic Minority Over-sampling Technique (SMOTE) to balance the classes. After applying SMOTE, you split the data into a training set (80%) and a test set (20%). You then train a logistic regression model on the training set and evaluate its 
+performance on the test set using the following metrics: accuracy, precision, recall, and F1-score. The results are as follows:
+
+- Accuracy: 0.95
+- Precision: 0.60
+- Recall: 0.75
+- F1-score: 0.67
+
+Questions:
+
+1. Explain why accuracy might not be the best metric to evaluate the performance of your model in this scenario.
+2. Calculate the confusion matrix for the test set based on the given precision and recall.
+3. Discuss the trade-offs between precision and recall in the context of this problem.
+4. Suggest one other technique (besides SMOTE) to handle the class imbalance and explain how it works.
+
+Solution:
+
+1. Accuracy as a Metric:
+   Accuracy might not be the best metric in this scenario because the dataset is highly imbalanced. With only 5% of the observations belonging to class 1, a model that predicts all observations as class 0 would still achieve a high accuracy of 95%. However, such a model would be useless for identifying 
+class 1 observations. Therefore, metrics like precision, recall, and F1-score are more informative in evaluating the model's performance on imbalanced datasets.
+
+2. Confusion Matrix Calculation:
+   Given:
+   - Precision (P) = 0.60
+   - Recall (R) = 0.75
+
+   Precision is defined as:
+   $$ P = \frac{TP}{TP + FP} $$
+
+   Recall is defined as:
+   $$ R = \frac{TP}{TP + FN} $$
+
+   Let's denote:
+   - TP: True Positives
+   - FP: False Positives
+   - FN: False Negatives
+   - TN: True Negatives
+
+   From the definitions:
+   $$ TP + FP = \frac{TP}{P} = \frac{TP}{0.60} $$
+   $$ TP + FN = \frac{TP}{R} = \frac{TP}{0.75} $$
+
+   Let TP = x. Then:
+   $$ TP + FP = \frac{x}{0.60} = 1.67x $$
+   $$ TP + FN = \frac{x}{0.75} = 1.33x $$
+
+   Since the total number of positive predictions (TP + FP) and the total number of actual positives (TP + FN) must be integers, we can solve for x using the total number of positive predictions and actual positives in the test set.
+
+   Assuming the test set has 2000 observations (20% of 10,000):
+   - Actual positives (class 1) in the test set = 0.05 * 2000 = 100
+   - Actual negatives (class 0) in the test set = 2000 - 100 = 1900
+
+   Using recall:
+   $$ TP = 0.75 * 100 = 75 $$
+   $$ FN = 100 - TP = 25 $$
+
+   Using precision:
+   $$ FP = \frac{TP}{P} - TP = \frac{75}{0.60} - 75 = 50 $$
+
+   Therefore:
+   $$ TN = 2000 - (TP + FP + FN) = 2000 - (75 + 50 + 25) = 1850 $$
+
+   The confusion matrix is:
+   |               | Predicted Class 0 | Predicted Class 1 |
+   |---------------|-------------------|-------------------|
+   | Actual Class 0| 1850              | 50                |
+   | Actual Class 1| 25                | 75                |
+
+3. Trade-offs Between Precision and Recall:
+   - Precision measures the proportion of true positive predictions among all positive predictions. High precision indicates a low false positive rate.
+   - Recall measures the proportion of true positive predictions among all actual positives. High recall indicates a low false negative rate.
+
+   In this context, a high recall is important because we want to identify as many class 1 observations as possible. However, increasing recall may decrease precision, leading to more false positives. Conversely, increasing precision may decrease recall, leading to more false negatives. The F1-score balances these trade-offs by considering both precision and recall.
+
+4. Alternative Technique - Cost-Sensitive Learning:
+   Cost-sensitive learning assigns different misclassification costs to different classes. In this scenario, misclassifying a class 1 observation (false negative) might be more costly than misclassifying a class 0 observation (false positive). By incorporating these costs into the learning algorithm, the model can be trained to minimize the overall cost, rather than just the number of misclassifications. 
+This approach helps in handling class imbalance by focusing on the more important class.
